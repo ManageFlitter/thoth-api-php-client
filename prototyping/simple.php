@@ -9,7 +9,7 @@ $t = <<<EOF
 EOF;
 $t = ltrim(rtrim($t));
 
-// echo "PUT: " . $client->put("commision", $t) . "\n";
+echo "PUT: " . $client->put("commision", $t) . "\n";
 
 echo "GET: " . $client->get("commision", array("urls"), "hourly") . "\n";
 
