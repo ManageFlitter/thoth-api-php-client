@@ -16,16 +16,48 @@ abstract class ThothApiClient_Command_AbstractCommand
 	}
 
 	/**
-	 * Creates a response string for the given data
-	 * @param array
-	 * @return string JSON object encoded to a string
+	 * Creates a serialised job string for the given data
+   * @param string $type GET | PUT
+   * #param array $job Job to be serialised
+	 * @return string JSON object serialised to a string
 	 */
-	protected function _createResponse($type, $job)
+	protected function _createJob($type, $job)
 	{
-    $job["id"] = $this->_uniqueId();
-
 		return strtoupper($type) . ' ' . json_encode($job) . "\r\n";
 	}
+
+  /**
+   * Creates a serialised response string that contains the unique job ID
+   * @param string $id The uniwue job ID
+   * @param string $reply The reply from thothd
+   * @return string JSON object serialised to a string
+   */
+  protected function _createReply($id, $reply)
+  {
+    $first = substr($reply, 0, 1);
+    if ($first != '"' && $first != "'" && $first != '[' && $first != '{') $reply = '"' . $reply . '"';
+    return '{"id": "' . $id . '", "reply":' . $reply . '}';
+  }
+
+  /**
+   * Send off a job and process the response
+   * @param string $job The JSON serialised job to submit
+   * @return string $reply JSON reply object serialised to a string
+   */
+  protected function _sendAndProcess($socket, $job)
+  {
+    $reply = $socket->write($job);
+
+    if ($reply <= 0)
+      throw new ThothApiClient_Exception_ConnectionException("Read nothing from the server");
+
+    $reply = rtrim($socket->read());
+
+    if (substr($reply, 0, 3) == 'ERR')
+      throw new ThothApiClient_Exception_ProtocolException($reply);
+
+    return $reply;
+  }
 
   /**
    * Creates a unique job ID that encodes the server addresses sending

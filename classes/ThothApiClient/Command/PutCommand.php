@@ -23,23 +23,15 @@ class ThothApiClient_Command_PutCommand extends ThothApiClient_Command_AbstractC
 	 */
 	public function send($socket)
 	{
+    $id = $this->_uniqueId();
     $job = array(
-      "id" => NULL,
+      "id" => $id,
       "term" => $this->_term,
       "tweets" => json_decode($this->_tweets)
     );
-    $reply = $socket->write($this->_createResponse('PUT', $job));
+    $reply = $this->_sendAndProcess($socket, $this->_createJob('PUT', $job));
 
-    if ($reply <= 0)
-      throw new ThothApiClient_Exception_ConnectionException("Read nothing from the server");
-
-    $reply = rtrim($socket->read());
-
-    // TODO: may want to do some checking of $reply here and throw and exception
-    if (substr($reply, 0, 3) == 'ERR')
-      throw new ThothApiClient_Exception_ProtocolException($reply);
-
-    return $reply;
+    return $this->_createReply($id, $reply);
 	}
 }
 ?>

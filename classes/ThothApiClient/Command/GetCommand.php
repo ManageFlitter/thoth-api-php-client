@@ -25,24 +25,16 @@ class ThothApiClient_Command_GetCommand extends ThothApiClient_Command_AbstractC
    */
   public function send($socket)
   {
+  $id = $this->_uniqueId();
     $job = array(
-      "id" => NULL,
+      "id" => $id,
       "term" => $this->_term,
       "ds" => $this->_ds
     );
     if ($this->_interval) $job["interval"] = $this->_interval;
-    $reply = $socket->write($this->_createResponse('GET', $job));
+    $reply = $this->_sendAndProcess($socket, $this->_createJob('GET', $job));
 
-    if ($reply <= 0)
-      throw new ThothApiClient_Exception_ConnectionException("Read nothing from the server");
-
-    $reply = rtrim($socket->read());
-
-    // TODO: may want to do some checking of $reply here and throw and exception
-    if (substr($reply, 0, 3) == 'ERR')
-      throw new ThothApiClient_Exception_ProtocolException($reply);
-
-    return $reply;
+    return $this->_createReply($id, $reply);
   }
 }
 ?>
