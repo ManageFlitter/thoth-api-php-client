@@ -49,11 +49,23 @@ class ThothApiClient_Socket_StreamSocketClient implements ThothApiClient_Socket
 	}
 
   /**
+   * Clean up afetr ourselves.
+   */
+  function __destruct() {
+    if($this->_socket) {
+      fwrite($this->_socket, "quit\n");
+      fgets($this->_socket);
+      fclose($this->_socket);
+      $this->_socket = null;
+    }
+  }
+
+  /**
    * Write a line to the socket.
 	 * @see ThothApiClient_Socket::write()
 	 */
-	public function write($data)
-	{
+  public function write($data)
+  {
     $reply = fwrite($this->_socket, $data);
 
     if ($reply == FALSE)
@@ -62,7 +74,7 @@ class ThothApiClient_Socket_StreamSocketClient implements ThothApiClient_Socket
     }
 
     return $reply;
-	}
+  }
 
   /**
    * Read a line from the socket.
@@ -72,11 +84,11 @@ class ThothApiClient_Socket_StreamSocketClient implements ThothApiClient_Socket
 	{
     $reply = '';
 		while ($buffer = fgets($this->_socket)) {
-      if ($buffer == FALSE and substr($buffer, -2, 2) != "\r\n") {
+      if ($buffer == FALSE and substr($buffer, -1, 1) != "\n") {
         throw new ThothApiClient_Exception_SocketException('read() returned false');
       }
       $reply .= $buffer;
-      if (substr($reply, -2, 2) == "\r\n") break;
+      if (substr($reply, -1, 1) == "\n") break;
     }
 
 		return $reply;

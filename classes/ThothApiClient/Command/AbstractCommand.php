@@ -23,7 +23,7 @@ abstract class ThothApiClient_Command_AbstractCommand
 	 */
 	protected function _createJob($type, $job)
 	{
-		return strtoupper($type) . ' ' . json_encode($job) . "\r\n";
+		return strtoupper($type) . ' ' . json_encode($job) . "\n";
 	}
 
   /**
@@ -86,7 +86,7 @@ abstract class ThothApiClient_Command_AbstractCommand
   protected function _ipToHex($quad = '')
   {
     $hex = "";
-    if ($quad == "") $quad = gethostbyname(gethostname());
+    if ($quad == "") $quad = gethostbyname(php_uname('n'));
     $quads = explode('.', $quad);
     for ($i = 0; $i <= count($quads) - 1; $i++) {
       $hex .= substr("0" . dechex($quads[$i]), -2);
