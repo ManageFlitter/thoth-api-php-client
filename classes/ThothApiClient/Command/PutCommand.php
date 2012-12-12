@@ -11,10 +11,10 @@ class ThothApiClient_Command_PutCommand extends ThothApiClient_Command_AbstractC
 	 * @param string $term The search term
 	 * @param string $tweets Array of 1 or more Twitter.attr serialized JSON objects
 	 */
-	public function __construct($term, $tweets)
+	public function __construct($params=array())
 	{
-		$this->_term = $term;
-		$this->_tweets = $tweets;
+		$this->_term = $params['term'];
+		$this->_tweets = $params['tweets'];
   }
 
   /**

@@ -53,9 +53,9 @@ class ThothApiClient
    * @param string $tweets array of 1 or more Twitter.attr serialized JSON objects
 	 * @return string OK | ERR...
 	 */
-	public function put($term, $tweets)
+	public function put($params)
 	{
-		return $this->_dispatch(new ThothApiClient_Command_PutCommand($term, $tweets));
+		return $this->_dispatch(new ThothApiClient_Command_PutCommand($params));
 	}
 
   /**
@@ -64,9 +64,9 @@ class ThothApiClient
    * @param array $ds array of 1 or more data sources to query
    * @return string JSON object
    */
-  public function get($term, $ds, $interval=NULL)
+  public function get($params)
   {
-    return $this->_dispatch(new ThothApiClient_Command_GetCommand($term, $ds, $interval));
+    return $this->_dispatch(new ThothApiClient_Command_GetCommand($params));
   }
 
 	/**
