@@ -10,6 +10,7 @@ class ThothApiClient_Command_GetCommand extends ThothApiClient_Command_AbstractC
    * Bootstrap a new GET command.
    * @param string $term The search term
    * @param array $ds An array of data sources to search
+   * @param string $ts An timestamp to search in
    * @param string $interval The interval data should be aggregated on
    * @param integer $offset The offset to return matches from
    * @param integer $length The number of items to retrieve from offset
@@ -18,6 +19,7 @@ class ThothApiClient_Command_GetCommand extends ThothApiClient_Command_AbstractC
   {
     $this->_term = $params['term'];
     $this->_ds = $params['ds'];
+    $this->_ts = array_key_exists('ts', $params) ? $params['ts'] : NULL;
     $this->_interval = array_key_exists('interval', $params) ? $params['interval'] : NULL;
     $this->_offset = array_key_exists('offset', $params) ? $params['offset'] : NULL;
     $this->_length = array_key_exists('length', $params) ? $params['length'] : NULL;
@@ -35,6 +37,7 @@ class ThothApiClient_Command_GetCommand extends ThothApiClient_Command_AbstractC
       'term' => $this->_term,
       'ds' => $this->_ds
     );
+    if (!is_null($this->_ts)) $job['ts'] = $this->_ts;
     if (!is_null($this->_interval)) $job['interval'] = $this->_interval;
     if (!is_null($this->_offset)) $job['offset'] = $this->_offset;
     if (!is_null($this->_length)) $job['length'] = $this->_length;
