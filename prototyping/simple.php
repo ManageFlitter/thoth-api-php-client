@@ -25,3 +25,8 @@ echo "PUT: " . $client->put(array('term' => 'commision', 'tweets' => $t)) . "\n"
 // Collect all tweets related to a specific term + data source + timestamp
 // echo "GET: " . $client->get(array('term' =>'commision', 'ds' => array('authors'), 'ts' => '2012122716')) . "\n";
 
+// Collect all tweets related to a specific term + data source + timestamp
+// scoped by the supplied filer
+// echo "GET: " . $client->get(array('term' =>'#clojure', 'ds' => array('languages'), 'ts' => '2013010423', 'filter' => 'entities.hashtags fi "text" eq "clojars"')) . "\n";
+// echo "GET: " . $client->get(array('term' =>'#clojure', 'ds' => array('languages'), 'ts' => '2013010423', 'filter' => 'iso_language_code eq "en"')) . "\n";
+
