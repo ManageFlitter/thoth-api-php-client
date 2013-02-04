@@ -39,7 +39,7 @@ class ThothApiClient_Socket_StreamSocketClient implements ThothApiClient_Socket
       $this->_errorNumber,
       $this->_errorMessage,
       $this->_connectTimeout,
-      STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT
+      STREAM_CLIENT_CONNECT
     );
 		if (!$this->_socket)
 		{
