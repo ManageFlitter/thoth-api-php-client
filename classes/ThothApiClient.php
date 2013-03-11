@@ -11,20 +11,20 @@
  */
 class ThothApiClient
 {
-	const DEFAULT_HOST = '127.0.0.1';
-	const DEFAULT_PORT = 8888;
+	const DEFAULT_COMPRESSION = FALSE;
 
 	private $_connection;
 
   /**
    * Bootstraps a new instance of ThothApiClient.
 	 * @param string $host
-	 * @param int $port
-	 * @param float $connectTimeout
+	 * @param int    $port
+	 * @param float  $connectTimeout
+   * @param bool   $compression
 	 */
-	public function __construct($host = self::DEFAULT_HOST, $port = self::DEFAULT_PORT, $connectTimeout = NULL)
+	public function __construct($hosts=array('readers' => array('127.0.0.1:8888'), 'writers' => array('127.0.0.1:8888')), $connectTimeout=NULL, $compression=FALSE)
 	{
-		$this->setConnection(new ThothApiClient_Connection($host, $port, $connectTimeout));
+		$this->setConnection(new ThothApiClient_Connection($hosts, $connectTimeout, $compression));
 	}
 
 	/**

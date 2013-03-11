@@ -9,25 +9,30 @@ class ThothApiClient_Connection
 {
 	const DEFAULT_CONNECT_TIMEOUT = 5;
 
-  private $_socket;
-  private $_hostname;
-  private $_port;
+  private $_readerSocket;
+  private $_writerSocket;
+  private $_hosts;
+  private $_readers;
+  private $_writers;
   private $_connectTimeout;
+  private $_compression;
 
 	/**
    * Bootstrap a ThothApiClient_Connection.
-	 * @param string $hostname
-	 * @param int $port
-	 * @param float $connectTimeout
+	 * @param array  $hosts
+	 * @param float  $connectTimeout
+	 * @param mixed  $compression
 	 */
-	public function __construct($hostname, $port, $connectTimeout = NULL)
+	public function __construct($hosts, $connectTimeout=NULL, $compression)
 	{
 		if (is_null($connectTimeout) || !is_numeric($connectTimeout))
 			$connectTimeout = self::DEFAULT_CONNECT_TIMEOUT;
 
-		$this->_hostname = $hostname;
-		$this->_port = $port;
+		$this->_hosts = $hosts;
+    $this->_readers = $hosts['readers'];
+    $this->_writers = $hosts['writers'];
 		$this->_connectTimeout = $connectTimeout;
+		$this->_compression = $compression;
 	}
 
 	/**
@@ -38,7 +43,7 @@ class ThothApiClient_Connection
 	 */
 	public function setSocket(ThothApiClient_Socket $socket)
 	{
-		$this->_socket = $socket;
+		$this->_reader_socket = $this->_writer_socket = $socket;
 		return $this;
 	}
 
@@ -50,7 +55,7 @@ class ThothApiClient_Connection
 	 */
 	public function dispatchCommand($command)
 	{
-		$socket = $this->_getSocket();
+		$socket = $this->_getSocket($command->getAction());
 
     return $command->send($socket);
 	}
@@ -82,23 +87,45 @@ class ThothApiClient_Connection
 		return $this->_port;
 	}
 
+  /**
+   * Get the host list of readers
+   * @return int
+   */
+  public function getReaders()
+  {
+    return $this->_readers;
+  }
+
+  /**
+   * Get the host list of writers
+   * @return int
+   */
+  public function getWriters()
+  {
+    return $this->_writers;
+  }
+
 	/**
 	 * Socket reference for the connection to thothd.
+   * @param  string  $action
 	 * @return ThothApiClient_Socket
 	 * @throws ThothApiClient_Exception_ConnectionException
 	 */
-	private function _getSocket()
+	private function _getSocket($action)
 	{
-		if (!isset($this->_socket))
+    $socket = $action == 'GET' ? '_readerSocket' : '_writerSocket';
+    $hosts = $action == 'GET' ? $this->_readers : $this->_writers;
+
+		if (!isset($this->$socket))
 		{
-      $this->_socket = new ThothApiClient_Socket_StreamSocketClient(
-				$this->_hostname,
-				$this->_port,
-				$this->_connectTimeout
+      $this->$socket = new ThothApiClient_Socket_StreamSocketClient(
+				$hosts[array_rand($hosts)],  // choose a random host to distribute load
+        $this->_connectTimeout,
+        $this->_compression
 			);
 		}
 
-		return $this->_socket;
+		return $this->$socket;
 	}
 
   /**

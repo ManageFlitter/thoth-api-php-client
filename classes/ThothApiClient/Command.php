@@ -6,6 +6,12 @@
  */
 interface ThothApiClient_Command
 {
+  /**
+   * Get the action
+   * @return string
+   */
+  public function getAction();
+
 	/**
 	 * Send a job to thothd.
 	 * @return string
