@@ -34,19 +34,26 @@ class ThothApiClient_Socket_StreamSocketClient implements ThothApiClient_Socket
     $this->_errorNumber = NULL;
     $this->_errorMessage = NULL;
 
-    $this->_socket = stream_socket_client(
-      $this->_resource,
-      $this->_errorNumber,
-      $this->_errorMessage,
-      $this->_connectTimeout,
-      STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT
-    );
+    $this->_socket = $this->_build_connection();
 		if (!$this->_socket)
 		{
       throw new ThothApiClient_Exception_ConnectionException(
         $this->_errorNumber, $this->_errorMessage . " (connecting to $host:$port)");
 		}
 	}
+
+  /**
+   * Build connection.
+   */
+  function _build_connection() {
+    return stream_socket_client(
+      $this->_resource,
+      $this->_errorNumber,
+      $this->_errorMessage,
+      $this->_connectTimeout,
+      STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT
+    );
+  }
 
   /**
    * Clean up afetr ourselves.
@@ -66,14 +73,47 @@ class ThothApiClient_Socket_StreamSocketClient implements ThothApiClient_Socket
 	 */
   public function write($data)
   {
-    $reply = fwrite($this->_socket, $data);
+    $bytes_written = 0;
+    $bytes_total = strlen($data);
+    $closed = FALSE;
 
-    if ($reply == FALSE)
-    {
-      throw new ThothApiClient_Exception_SocketException('write() failed to send data');
+    while (!$closed && $bytes_written < $bytes_total) {
+      $written = fwrite($this->_socket, $data);
+
+      if (!$written || $written == 0) {
+        $closed = TRUE;
+      } else {
+        $bytes_written += $written;
+      }
     }
 
-    return $reply;
+    // Retry if something went awry
+    if ($closed) {
+      fclose($this->_socket);
+      sleep(rand(1, 3));
+
+      $this->_socket = $this->_build_connection();
+      if ($this->_socket) {
+        $bytes_written = 0;
+        $bytes_total = strlen($data);
+        $closed = FALSE;
+
+        while (!$closed && $bytes_written < $bytes_total) {
+          $written = fwrite($this->_socket, $data);
+          if (!$written || $written == 0) {
+            $closed = TRUE;
+          } else {
+            $bytes_written += $written;
+          }
+        }
+      } else {
+        $closed = TRUE;
+      }
+    }
+
+    if ($closed) throw new ThothApiClient_Exception_SocketException('write() failed to send data');
+
+    return $bytes_written;
   }
 
   /**
@@ -83,7 +123,8 @@ class ThothApiClient_Socket_StreamSocketClient implements ThothApiClient_Socket
 	public function read()
 	{
     $reply = '';
-		while ($buffer = fgets($this->_socket)) {
+
+    while ($buffer = fgets($this->_socket)) {
       if ($buffer == FALSE and substr($buffer, -1, 1) != "\n") {
         throw new ThothApiClient_Exception_SocketException('read() returned false');
       }
