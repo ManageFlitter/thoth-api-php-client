@@ -72,7 +72,7 @@ class ThothApiClient
 	/**
 	 * Dispatches the specified command to the connection object.
 	 *
-	 * If a SocketException occurs, the connection is reset, and the command is
+	 * If a ConnectionException occurs, the connection is reset, and the command is
 	 * re-attempted once.
 	 *
 	 * @param ThothApiClient_Command $command
@@ -84,7 +84,7 @@ class ThothApiClient
 		{
 			$response = $this->_connection->dispatchCommand($command);
 		}
-		catch (ThothApiClient_Exception_SocketException $e)
+		catch (ThothApiClient_Exception_ConnectionException $e)
 		{
 			$this->_reconnect();
 			$response = $this->_connection->dispatchCommand($command);
