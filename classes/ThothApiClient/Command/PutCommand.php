@@ -28,8 +28,8 @@ class ThothApiClient_Command_PutCommand extends ThothApiClient_Command_AbstractC
     $job = array(
       "id" => $id,
       "term" => $this->_term,
-      "tweets" => json_decode($this->_tweets),
-      'relation' => $this->_relation
+      'relation' => $this->_relation,
+      "tweets" => json_decode($this->_tweets)
     );
     $reply = $this->_sendAndProcess($socket, $this->_createJob('PUT', $job));
 

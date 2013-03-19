@@ -11,10 +11,10 @@ EOF;
 $t = ltrim(rtrim($t));
 
 // Data write/save example
-echo "PUT: " . $client->put(array('term' => 'commision', 'tweets' => $t)) . "\n";
+echo "PUT: " . $client->put(array('term' => 'commision', 'tweets' => $t, 'relation' => 'enterprise')) . "\n";
 
 // Collect metrics that return data series aggregated to a specific interval
-echo "GET: " . $client->get(array('term' =>'commision', 'ds' => array("summary"), 'interval' => 'hourly')) . "\n";
+echo "GET: " . $client->get(array('term' =>'commision', 'ds' => array("summary"), 'interval' => 'hourly', 'relation' => 'enterprise')) . "\n";
 
 // Collect metrics that can be collected in batches/paginated
 // echo "GET: " . $client->get(array('term' =>'commision', 'ds' => array('tweets', 'users', 'urls'), 'interval' => 'daily', 'offset' => 50, 'length' => 2)) . "\n";
