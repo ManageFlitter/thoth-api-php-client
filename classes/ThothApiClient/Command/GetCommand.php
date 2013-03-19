@@ -24,6 +24,7 @@ class ThothApiClient_Command_GetCommand extends ThothApiClient_Command_AbstractC
     $this->_interval = array_key_exists('interval', $params) ? $params['interval'] : NULL;
     $this->_offset = array_key_exists('offset', $params) ? $params['offset'] : NULL;
     $this->_length = array_key_exists('length', $params) ? $params['length'] : NULL;
+    $this->_relation = array_key_exists('relation', $params) ? $params['relation'] : "personal";
   }
 
   /**
@@ -36,7 +37,8 @@ class ThothApiClient_Command_GetCommand extends ThothApiClient_Command_AbstractC
     $job = array(
       'id' => $id,
       'term' => $this->_term,
-      'ds' => $this->_ds
+      'ds' => $this->_ds,
+      'relation' => $this->_relation
     );
     if (!is_null($this->_ts)) $job['ts'] = $this->_ts;
     if (!is_null($this->_filter)) $job['filter'] = $this->_filter;

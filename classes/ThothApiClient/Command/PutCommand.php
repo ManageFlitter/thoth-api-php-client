@@ -15,6 +15,7 @@ class ThothApiClient_Command_PutCommand extends ThothApiClient_Command_AbstractC
 	{
 		$this->_term = $params['term'];
 		$this->_tweets = $params['tweets'];
+    $this->_relation = array_key_exists('relation', $params) ? $params['relation'] : "personal";
   }
 
   /**
@@ -27,7 +28,8 @@ class ThothApiClient_Command_PutCommand extends ThothApiClient_Command_AbstractC
     $job = array(
       "id" => $id,
       "term" => $this->_term,
-      "tweets" => json_decode($this->_tweets)
+      "tweets" => json_decode($this->_tweets),
+      'relation' => $this->_relation
     );
     $reply = $this->_sendAndProcess($socket, $this->_createJob('PUT', $job));
 
