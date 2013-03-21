@@ -56,7 +56,7 @@ class ThothApiClient_Socket_StreamSocketClient implements ThothApiClient_Socket
   }
 
   /**
-   * Clean up afetr ourselves.
+   * Clean up afert ourselves.
    */
   function __destruct() {
     if($this->_socket && !feof($this->_socket)) {
