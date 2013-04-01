@@ -24,17 +24,16 @@ class ThothApiClient_Command_GetCommand extends ThothApiClient_Command_AbstractC
     $this->_interval = array_key_exists('interval', $params) ? $params['interval'] : NULL;
     $this->_offset = array_key_exists('offset', $params) ? $params['offset'] : NULL;
     $this->_length = array_key_exists('length', $params) ? $params['length'] : NULL;
-    $this->_action = 'GET';
+    $this->_relation = array_key_exists('relation', $params) ? $params['relation'] : "personal";
   }
 
   /**
    * Get the action
-   * @see ThothApiClient_Command::getAction()
+   * @return string
    */
-  public function getAction()
-  {
-    return $this->_action;
-  }
+   public function getAction() {
+     return "GET";
+   }
 
   /**
    * Send a GET command to thotd.
@@ -46,7 +45,8 @@ class ThothApiClient_Command_GetCommand extends ThothApiClient_Command_AbstractC
     $job = array(
       'id' => $id,
       'term' => $this->_term,
-      'ds' => $this->_ds
+      'ds' => $this->_ds,
+      'relation' => $this->_relation
     );
     if (!is_null($this->_ts)) $job['ts'] = $this->_ts;
     if (!is_null($this->_filter)) $job['filter'] = $this->_filter;
@@ -54,7 +54,7 @@ class ThothApiClient_Command_GetCommand extends ThothApiClient_Command_AbstractC
     if (!is_null($this->_offset)) $job['offset'] = $this->_offset;
     if (!is_null($this->_length)) $job['length'] = $this->_length;
 
-    $reply = $this->_sendAndProcess($socket, $this->_createJob($this->_action, $job));
+    $reply = $this->_sendAndProcess($socket, $this->_createJob($this->getAction(), $job));
 
     return $this->_createReply($id, $reply);
   }

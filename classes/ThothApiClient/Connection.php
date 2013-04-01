@@ -118,11 +118,15 @@ class ThothApiClient_Connection
 
 		if (!isset($this->$socket))
 		{
-      $this->$socket = new ThothApiClient_Socket_StreamSocketClient(
-				$hosts[array_rand($hosts)],  // choose a random host to distribute load
-        $this->_connectTimeout,
-        $this->_compression
-			);
+      try {
+        $this->$socket = new ThothApiClient_Socket_StreamSocketClient(
+          $hosts[array_rand($hosts)],  // choose a random host to distribute load
+          $this->_connectTimeout,
+          $this->_compression
+        );
+      } catch (ThothApiClient_Exception_ConnectionException $e) {
+        trigger_error("ThothApiClient_Exception_ConnectionException: $e", E_USER_ERROR);
+      }
 		}
 
 		return $this->$socket;

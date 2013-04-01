@@ -15,16 +15,15 @@ class ThothApiClient_Command_PutCommand extends ThothApiClient_Command_AbstractC
 	{
 		$this->_term = $params['term'];
 		$this->_tweets = $params['tweets'];
-    $this->_action = 'PUT';
+    $this->_relation = array_key_exists('relation', $params) ? $params['relation'] : "personal";
   }
 
-  /**
-   * Get the action
-   * @see ThothApiClient_Command::getAction()
-   */
-  public function getAction()
-  {
-    return $this->_action;
+ /**
+  * Get the action
+  * @return string
+  */
+  public function getAction() {
+    return "PUT";
   }
 
   /**
@@ -37,10 +36,10 @@ class ThothApiClient_Command_PutCommand extends ThothApiClient_Command_AbstractC
     $job = array(
       "id" => $id,
       "term" => $this->_term,
+      'relation' => $this->_relation,
       "tweets" => json_decode($this->_tweets)
     );
-    error_log("JSON Last Error:".print_r(json_last_error(), TRUE));
-    $reply = $this->_sendAndProcess($socket, $this->_createJob($this->_action, $job));
+    $reply = $this->_sendAndProcess($socket, $this->_createJob($this->getAction(), $job));
 
     return $this->_createReply($id, $reply);
 	}

@@ -14,10 +14,10 @@ $t = utf8_encode(ltrim(rtrim($t)));
 $client = new ThothApiClient(array('readers' => array('127.0.0.1:8888'), 'writers' => array('127.0.0.1:8888')));
 
 // Data write/save example
-echo "PUT: " . $client->put(array('term' => '#clojure', 'tweets' => $t)) . "\n";
+echo "PUT: " . $client->put(array('term' => 'commision', 'tweets' => $t, 'relation' => 'enterprise')) . "\n";
 
 // Collect metrics that return data series aggregated to a specific interval
-echo "GET: " . $client->get(array('term' =>'#clojure', 'ds' => array("urls", "authors"), 'interval' => 'hourly')) . "\n";
+echo "GET: " . $client->get(array('term' =>'commision', 'ds' => array("summary"), 'interval' => 'hourly', 'relation' => 'enterprise')) . "\n";
 
 // Collect metrics that can be collected in batches/paginated
 // echo "GET: " . $client->get(array('term' =>'commision', 'ds' => array('tweets', 'users', 'urls'), 'interval' => 'daily', 'offset' => 50, 'length' => 2)) . "\n";
@@ -40,5 +40,5 @@ echo "GET: " . $client->get(array('term' =>'#clojure', 'ds' => array("urls", "au
 //
 // $client = new ThothApiClient(array('readers' => array('127.0.0.1'), 'writers' => array('127.0.0.1')));
 //echo "GET: " . $client->get(array('term' =>'#clojure', 'ds' => array('stats'), 'interval' => 'daily')) . "\n";
-echo "GET: " . $client->get(array('term' =>'#clojure', 'ds' => array("summary"), 'interval' => 'hourly')) . "\n";
+//echo "GET: " . $client->get(array('term' =>'#clojure', 'ds' => array("summary"), 'interval' => 'hourly')) . "\n";
 

@@ -24,7 +24,10 @@ class ThothApiClient
 	 */
 	public function __construct($hosts=array('readers' => array('127.0.0.1:8888'), 'writers' => array('127.0.0.1:8888')), $connectTimeout=NULL, $compression=FALSE)
 	{
-		$this->setConnection(new ThothApiClient_Connection($hosts, $connectTimeout, $compression));
+    $this->_hosts = $hosts;
+    $this->_connectTimeout = $connectTimeout;
+    $this->_compression = $compression;
+		$this->setConnection(new ThothApiClient_Connection($this->_hosts, $this->_connectTimeout, $this->_compression));
 	}
 
 	/**
@@ -72,7 +75,7 @@ class ThothApiClient
 	/**
 	 * Dispatches the specified command to the connection object.
 	 *
-	 * If a SocketException occurs, the connection is reset, and the command is
+	 * If a ConnectionException occurs, the connection is reset, and the command is
 	 * re-attempted once.
 	 *
 	 * @param ThothApiClient_Command $command
@@ -84,7 +87,7 @@ class ThothApiClient
 		{
 			$response = $this->_connection->dispatchCommand($command);
 		}
-		catch (ThothApiClient_Exception_SocketException $e)
+		catch (ThothApiClient_Exception_ConnectionException $e)
 		{
 			$this->_reconnect();
 			$response = $this->_connection->dispatchCommand($command);
@@ -98,12 +101,7 @@ class ThothApiClient
 	 */
 	private function _reconnect()
 	{
-		$new_connection = new ThothApiClient_Connection(
-			$this->_connection->getHost(),
-			$this->_connection->getPort()
-		);
-
-		$this->setConnection($new_connection);
+    $this->setConnection(new ThothApiClient_Connection($this->_hosts, $this->_connectTimeout, $this->_compression));
 	}
 }
 ?>
