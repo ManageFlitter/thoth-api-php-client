@@ -22,9 +22,10 @@ class ThothApiClient
 	 * @param float  $connectTimeout
    * @param bool   $compression
 	 */
-	public function __construct($hosts=array('readers' => array('127.0.0.1:8888'), 'writers' => array('127.0.0.1:8888')), $connectTimeout=NULL, $compression=FALSE)
+	public function __construct($hosts, $connectTimeout=NULL, $compression=FALSE)
 	{
     $this->_hosts = $hosts;
+    echo "HOSTS: " . print_r($this->_hosts, TRUE) . "\n";
     $this->_connectTimeout = $connectTimeout;
     $this->_compression = $compression;
 		$this->setConnection(new ThothApiClient_Connection($this->_hosts, $this->_connectTimeout, $this->_compression));

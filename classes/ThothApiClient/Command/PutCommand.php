@@ -15,7 +15,7 @@ class ThothApiClient_Command_PutCommand extends ThothApiClient_Command_AbstractC
 	{
 		$this->_term = $params['term'];
 		$this->_tweets = $params['tweets'];
-    $this->_relation = array_key_exists('relation', $params) ? $params['relation'] : "personal";
+    $this->_relation = array_key_exists('relation', $params) ? $params['relation'] : "free";
   }
 
  /**
