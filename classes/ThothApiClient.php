@@ -25,7 +25,6 @@ class ThothApiClient
 	public function __construct($hosts, $connectTimeout=NULL, $compression=FALSE)
 	{
     $this->_hosts = $hosts;
-    echo "HOSTS: " . print_r($this->_hosts, TRUE) . "\n";
     $this->_connectTimeout = $connectTimeout;
     $this->_compression = $compression;
 		$this->setConnection(new ThothApiClient_Connection($this->_hosts, $this->_connectTimeout, $this->_compression));
