@@ -52,6 +52,7 @@ class ThothApiClient_Socket_StreamSocketClient implements ThothApiClient_Socket
    */
   function __destruct() {
     if($this->_socket) {
+      echo 'stream_get_meta_data: '.print_f(stream_get_meta_data($this->_socket))."\n";
       if (PHP_VERSION_ID >= 50406 && !feof($this->_socket)) {
         fwrite($this->_socket, "quit\n");
         fgets($this->_socket);
