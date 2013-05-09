@@ -54,7 +54,7 @@ class ThothApiClient_Socket_StreamSocketClient implements ThothApiClient_Socket
     if($this->_socket) {
       if (PHP_VERSION_ID >= 50406 && !feof($this->_socket)) {
         $this->write('quit');
-        $this->read();
+        $reply = $this->read();
         fclose($this->_socket);
       }
     }
@@ -67,7 +67,8 @@ class ThothApiClient_Socket_StreamSocketClient implements ThothApiClient_Socket
 	 */
   public function write($data)
   {
-    $data = base64_encode(gzdeflate($data, 6)) . "\n";
+    if ($this->usingCompression()) $data = ThothApiClient_Compression::compress($data);
+    $data = $data . "\n";
     $bytes_written = 0;
     $bytes_total = strlen($data);
     $closed = FALSE;
@@ -108,7 +109,9 @@ class ThothApiClient_Socket_StreamSocketClient implements ThothApiClient_Socket
       if (substr($reply, -1, 1) == "\n") break;
     }
 
-    return ($reply == "") ? $reply : gzinflate(base64_decode($reply, 6));
+    if ($reply != '' && $this->usingCompression()) $reply = ThothApiClient_Compression::uncompress($reply);
+
+    return $reply;
 	}
 
   /**

@@ -11,12 +11,12 @@ $t = utf8_encode(ltrim(rtrim($t)));
 // echo "TWEET: " . $t . "\n";
 
 // Create a connection
-$client = new ThothApiClient(array('readers' => array('127.0.0.1:8888'), 'writers' => array('127.0.0.1:8888', '127.0.0.1:8888')));
+$client = new ThothApiClient(array('readers' => array('127.0.0.1:8888'), 'writers' => array('127.0.0.1:8888', '127.0.0.1:8888')), 5, true);
 
 // Data write/save example
 
 // Collect metrics that return data series aggregated to a specific interval
-#echo "GET: " . $client->get(array('term' =>'#golang', 'ds' => array("summary"), 'interval' => 'hourly', 'relation' => 'platinumpro')) . "\n";
+echo "GET: " . $client->get(array('term' =>'google', 'ds' => array("summary"), 'interval' => 'hourly', 'relation' => 'platinumpro')) . "\n";
 echo "PUT: " . $client->put(array('term' => 'commision', 'tweets' => $t, 'relation' => 'platinumpro')) . "\n";
 
 // Collect metrics that can be collected in batches/paginated

@@ -46,18 +46,13 @@ abstract class ThothApiClient_Command_AbstractCommand
    */
   protected function _sendAndProcess($socket, $job)
   {
-    if ($socket->usingCompression()) $job = ThothApiClient_Compression::compress($job);
     $reply = $socket->write($job);
 
     if ($reply <= 0)
       throw new ThothApiClient_Exception_ConnectionException("Read nothing from the server");
 
     $reply = '';
-    if ($socket->usingCompression()) {
-      $reply = ThothApiClient_Compression::uncompress($socket->read());
-    } else {
-      $reply = $socket->read();
-    }
+    $reply = $socket->read();
     $reply = rtrim($reply);
 
     if (substr($reply, 0, 3) == 'ERR')
