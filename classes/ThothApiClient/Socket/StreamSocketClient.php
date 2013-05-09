@@ -54,7 +54,7 @@ class ThothApiClient_Socket_StreamSocketClient implements ThothApiClient_Socket
     if($this->_socket) {
       if (PHP_VERSION_ID >= 50406 && !feof($this->_socket)) {
         $this->write('quit');
-        echo $this->read();
+        $this->read();
         fclose($this->_socket);
       }
     }
@@ -108,7 +108,7 @@ class ThothApiClient_Socket_StreamSocketClient implements ThothApiClient_Socket
       if (substr($reply, -1, 1) == "\n") break;
     }
 
-    return gzinflate(base64_decode($reply, 6));
+    return ($reply == "") ? $reply : gzinflate(base64_decode($reply, 6));
 	}
 
   /**
