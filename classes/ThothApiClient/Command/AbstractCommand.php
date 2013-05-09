@@ -23,7 +23,7 @@ abstract class ThothApiClient_Command_AbstractCommand
 	 */
 	protected function _createJob($type, $job)
 	{
-		return strtoupper($type) . ' ' . json_encode($job) . "\n";
+		return strtoupper($type) . ' ' . json_encode($job);
 	}
 
   /**
