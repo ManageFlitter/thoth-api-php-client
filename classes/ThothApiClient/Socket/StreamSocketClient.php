@@ -51,7 +51,7 @@ class ThothApiClient_Socket_StreamSocketClient implements ThothApiClient_Socket
    * Clean up afert ourselves.
    */
   function __destruct() {
-    if($this->_socket) {
+    if(is_resource($this->_socket)) {
       try {
         $this->write('quit');
         $reply = $this->read();
