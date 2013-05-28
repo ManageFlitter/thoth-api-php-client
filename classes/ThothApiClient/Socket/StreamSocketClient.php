@@ -52,10 +52,13 @@ class ThothApiClient_Socket_StreamSocketClient implements ThothApiClient_Socket
    */
   function __destruct() {
     if($this->_socket) {
-      if (PHP_VERSION_ID >= 50406 && !feof($this->_socket)) {
+      try {
         $this->write('quit');
         $reply = $this->read();
         fclose($this->_socket);
+      }
+      catch(Exception $e) {
+        // ignore any errors as we're just going to clean the socket up
       }
     }
     $this->_socket = null;
