@@ -12,10 +12,10 @@ class ThothApiClient_Socket_StreamSocketClient implements ThothApiClient_Socket
 	/**
    * Bootstrap a new ThothApiClient_Socket_StreamSocketClient.
 	 * @param string $host
-	 * @param int $connectTimeout, default 5 seconds
+	 * @param int $connectTimeout, default 10 seconds
 	 * @param int $compression, defaults FALSE
 	 */
-	public function __construct($host, $connectTimeout=5, $compression=FALSE)
+	public function __construct($host, $connectTimeout=10, $compression=FALSE)
   {
     $host = explode(':', $host);
     $this->_host = $host[0];
