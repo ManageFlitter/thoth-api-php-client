@@ -3,8 +3,8 @@
  * ThothApiClient is a PHP client for the Thoth Twitter stats backend.
  * The class is a simple facade for the various underlying components.
  *
- * @see https://github.com/MelonMedia/thoth-api-php-client
- * @see https://github.com/MelonMedia/thoth
+ * @see https://github.com/ManageFlitter/thoth-api-php-client
+ * @see https://github.com/ManageFlitter/thoth
  *
  * @author Charl Mattthee
  * @package ThothApiClient
